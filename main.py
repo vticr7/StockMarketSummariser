@@ -135,8 +135,8 @@ import os
 import pandas as pd
 
 def main():
-    # Claude API key
-    CLAUDE_API_KEY = "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"
+    # Gemini API key
+    GEMINI_API_KEY = "AIzaSyAtTFQCMaqQglEkSobKHCCUERbyXK5zjCs"
     
     # Create data directory if it doesn't exist
     os.makedirs('data', exist_ok=True)
@@ -186,10 +186,10 @@ def main():
     print("Access the dashboard at http://localhost:8050")
     
     try:
-        visualizer = StockVisualizer(stock_data, market_overview, claude_api_key=CLAUDE_API_KEY)
-        print("Claude API integration enabled successfully.")
+        visualizer = StockVisualizer(stock_data, market_overview, gemini_api_key=GEMINI_API_KEY)
+        print("Gemini API integration enabled successfully.")
     except Exception as e:
-        print(f"\nWarning: Claude API integration failed: {str(e)}")
+        print(f"\nWarning: Gemini API integration failed: {str(e)}")
         print("Falling back to basic visualization without AI analysis.")
         visualizer = StockVisualizer(stock_data, market_overview)
     
