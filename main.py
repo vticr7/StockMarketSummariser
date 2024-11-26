@@ -108,7 +108,7 @@ class ClaudeReportGenerator:
         
         # Claude Analysis
         pdf.set_font('DejaVu', '', 14)
-        pdf.cell(0, 10, "AI-Generated Analysis", ln=True)
+        
         pdf.ln(5)
         
         pdf.set_font('DejaVu', '', 12)

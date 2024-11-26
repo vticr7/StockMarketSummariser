@@ -10,6 +10,11 @@ class StockAnalyzer:
     
     def _calculate_metrics(self):
         """Calculate additional analysis metrics."""
+        # Ensure necessary columns are numeric
+        numeric_columns = ['P/E Ratio', 'Market Cap (Cr)', 'Volume', 'Daily Change %']
+        for col in numeric_columns:
+            self.df[col] = pd.to_numeric(self.df[col], errors='coerce')
+        
         # Calculate sector metrics
         sector_metrics = self.df.groupby('Sector').agg({
             'P/E Ratio': 'mean',
@@ -26,17 +31,24 @@ class StockAnalyzer:
         for _, row in self.df.iterrows():
             hist_data = row['Historical Data']
             
-            # Calculate moving averages
-            hist_data['SMA_20'] = hist_data['Close'].rolling(window=20).mean()
-            hist_data['SMA_50'] = hist_data['Close'].rolling(window=50).mean()
-            
-            # Store latest values in main dataframe
-            self.df.loc[self.df['Symbol'] == row['Symbol'], 'SMA_20'] = hist_data['SMA_20'].iloc[-1]
-            self.df.loc[self.df['Symbol'] == row['Symbol'], 'SMA_50'] = hist_data['SMA_50'].iloc[-1]
-            
-            # Calculate and store trading signals
-            self.df.loc[self.df['Symbol'] == row['Symbol'], 'Signal'] = \
-                'Buy' if hist_data['SMA_20'].iloc[-1] > hist_data['SMA_50'].iloc[-1] else 'Sell'
+            # Ensure 'Historical Data' exists and is in expected format
+            if isinstance(hist_data, pd.DataFrame) and 'Close' in hist_data.columns:
+                try:
+                    # Calculate moving averages
+                    hist_data['SMA_20'] = hist_data['Close'].rolling(window=20).mean()
+                    hist_data['SMA_50'] = hist_data['Close'].rolling(window=50).mean()
+
+                    # Store latest values in main dataframe
+                    self.df.loc[self.df['Symbol'] == row['Symbol'], 'SMA_20'] = hist_data['SMA_20'].iloc[-1]
+                    self.df.loc[self.df['Symbol'] == row['Symbol'], 'SMA_50'] = hist_data['SMA_50'].iloc[-1]
+                    
+                    # Calculate and store trading signals
+                    self.df.loc[self.df['Symbol'] == row['Symbol'], 'Signal'] = \
+                        'Buy' if hist_data['SMA_20'].iloc[-1] > hist_data['SMA_50'].iloc[-1] else 'Sell'
+                except Exception as e:
+                    print(f"Error processing historical data for {row['Symbol']}: {e}")
+            else:
+                print(f"Invalid historical data for {row['Symbol']}")
     
     def get_market_overview(self):
         """Get overall market summary."""

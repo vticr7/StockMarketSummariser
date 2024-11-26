@@ -211,7 +211,7 @@ class StockVisualizer:
             
             # Date
             pdf.set_font('Arial', '', 10)
-            pdf.cell(0, 10, f"AI-Enhanced Analysis Report (Gemini)", ln=True)
+            
             pdf.cell(0, 10, f"Generated on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}", ln=True)
             pdf.ln(10)
             
@@ -252,7 +252,7 @@ class StockVisualizer:
             
             # Gemini Analysis
             pdf.set_font('Arial', 'B', 14)
-            pdf.cell(0, 10, "AI-Generated Analysis", ln=True)
+            
             pdf.ln(5)
             
             pdf.set_font('Arial', '', 12)
